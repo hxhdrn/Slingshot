@@ -7,16 +7,16 @@ public class PlayerMove : MonoBehaviour
 {
     [SerializeField] float moveSpeed;
     [SerializeField] float pullCap; // longest distance for the pullback vector
-    [SerializeField] GameObject projectile;
-    [SerializeField] GameObject shootArrow;
+    [SerializeField] GameObject projectile; // prefab
+    [SerializeField] GameObject shootArrow; // arrow cursor
 
     Rigidbody2D rb;
     Vector2 pullback;
     Vector2 clickPos;
 
-    bool on;
-    bool release;
-    bool shoot;
+    bool on; // currently holding left click
+    bool release; // just released left click
+    bool shoot; // currently holding space
 
     private void Start()
     {
@@ -65,6 +65,7 @@ public class PlayerMove : MonoBehaviour
         {
             if (shoot)
             {
+                // create, aim, and shoot projectile
                 GameObject newProj = Instantiate(projectile);
                 newProj.transform.position = shootArrow.transform.position;
                 newProj.transform.rotation = shootArrow.transform.rotation;
@@ -80,11 +81,14 @@ public class PlayerMove : MonoBehaviour
         {
             if (!shoot)
             {
+                // move player
                 rb.AddForce(pullback.normalized * moveSpeed, ForceMode2D.Impulse);
             }
             release = false;
         }
     }
+
+    // getters
 
     public bool GetOn()
     {
