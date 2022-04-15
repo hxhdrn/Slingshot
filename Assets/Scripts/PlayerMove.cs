@@ -14,6 +14,8 @@ public class PlayerMove : MonoBehaviour
     Vector2 pullback;
     Vector2 clickPos;
 
+    AudioManager audioMgr;
+
     bool on; // currently holding left click
     bool release; // just released left click
     bool shoot; // currently holding space
@@ -21,6 +23,7 @@ public class PlayerMove : MonoBehaviour
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        audioMgr = FindObjectOfType<AudioManager>();
     }
 
     public void LeftClick(InputAction.CallbackContext info)
@@ -82,7 +85,9 @@ public class PlayerMove : MonoBehaviour
             if (!shoot)
             {
                 // move player
+                audioMgr.PlaySound("move");
                 rb.AddForce(pullback.normalized * moveSpeed, ForceMode2D.Impulse);
+
             }
             release = false;
         }

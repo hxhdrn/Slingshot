@@ -11,39 +11,45 @@ public class Arrow : MonoBehaviour
     [SerializeField] SpriteRenderer moveRend;
     [SerializeField] SpriteRenderer shootRend;
 
+    Menu menu;
+
     private void Start()
     {
         DOTween.Init();
+        menu = FindObjectOfType<Menu>();
     }
 
     private void Update()
     {
-        if (playerMove.GetOn()) // left click held
+        if (!menu.paused)
         {
-            Vector2 pullback = playerMove.GetPullback(); // arrow direction
-            if (pullback != Vector2.zero)
+            if (playerMove.GetOn()) // left click held
             {
-                // swap cursors
-                if (playerMove.GetShoot())
+                Vector2 pullback = playerMove.GetPullback(); // arrow direction
+                if (pullback != Vector2.zero)
                 {
-                    shootRend.enabled = true;
-                    moveRend.enabled = false;
+                    // swap cursors
+                    if (playerMove.GetShoot())
+                    {
+                        shootRend.enabled = true;
+                        moveRend.enabled = false;
+                    }
+                    else
+                    {
+                        moveRend.enabled = true;
+                        shootRend.enabled = false;
+                    }
+
+                    float angle = Mathf.Atan2(pullback.y, pullback.x) * Mathf.Rad2Deg; // find angle in degrees based on vector2
+                    transform.DORotate(new Vector3(0, 0, angle), .1f); // tween to new angle
                 }
-                else
-                {
-                    moveRend.enabled = true;
-                    shootRend.enabled = false;
-                }
-                
-                float angle = Mathf.Atan2(pullback.y, pullback.x) * Mathf.Rad2Deg; // find angle in degrees based on vector2
-                transform.DORotate(new Vector3(0, 0, angle), .1f); // tween to new angle
             }
-        }
-        else
-        {
-            // cursors invisible
-            moveRend.enabled = false;
-            shootRend.enabled = false;
+            else
+            {
+                // cursors invisible
+                moveRend.enabled = false;
+                shootRend.enabled = false;
+            }
         }
     }
 }
